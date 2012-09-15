@@ -87,16 +87,16 @@ public class JSONCompare {
                 compareValues(fullKey, expectedValue, actualValue, mode, result);
             }
             else {
-                result.fail("Does not contain expected key: " + prefix + key);
+                result.missingField(prefix + key);
             }
         }
 
-        // If strict, check for vice-versa
+        // If non-extensible, check for vice-versa
         if (!mode.isExtensible()) {
             Set<String> actualKeys = getKeys(actual);
             for(String key : actualKeys) {
                 if (!expected.has(key)) {
-                    result.fail("Strict checking failed.  Got but did not expect: " + prefix + key);
+                    result.unexpectedField(prefix + key);
                 }
             }
         }

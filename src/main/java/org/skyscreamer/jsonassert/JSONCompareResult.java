@@ -14,6 +14,8 @@ public class JSONCompareResult {
     private Object _expected;
     private Object _actual;
     private final List<FieldComparisonFailure> _fieldFailures = new ArrayList<FieldComparisonFailure>();
+    private final List<String> _missingFields = new ArrayList<String>();
+    private final List<String> _unexpectedFields = new ArrayList<String>();
 
     /**
      * Default constructor.
@@ -56,6 +58,14 @@ public class JSONCompareResult {
      */
     public List<FieldComparisonFailure> getFieldFailures() {
         return Collections.unmodifiableList(_fieldFailures);
+    }
+
+    public List<String> getMissingFields() {
+        return Collections.unmodifiableList(_missingFields);
+    }
+
+    public List<String> getUnexpectedFields() {
+        return Collections.unmodifiableList(_unexpectedFields);
     }
 
     /**
@@ -123,6 +133,16 @@ public class JSONCompareResult {
         this._actual = actual;
         fail(formatFailureMessage(field, expected, actual));
         return this;
+    }
+
+    public void missingField(String field) {
+        this._missingFields.add(field);
+        fail("Does not contain expected key: " + field);
+    }
+
+    public void unexpectedField(String field) {
+        this._unexpectedFields.add(field);
+        fail("Strict checking failed.  Got but did not expect: " + field);
     }
 
     private String formatFailureMessage(String field, Object expected, Object actual) {
